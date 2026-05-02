@@ -1,18 +1,28 @@
 #include "MenuScene.h"
 #include "PlayingScene.h"
+#include "constants.h"
 #include <raylib.h>
 
-MenuScene::MenuScene(GameWorld& world)
-: world(world) {}
+MenuScene::MenuScene(GameWorld &world)
+    : world(world)
+{
+}
 
-std::unique_ptr<Scene> MenuScene::update(float dt) {
+std::unique_ptr<Scene> MenuScene::update(float /*dt*/)
+{
     if (IsKeyPressed(KEY_ENTER))
         return std::make_unique<PlayingScene>(world);
 
     return nullptr;
 }
 
-void MenuScene::draw() {
-    DrawText("AVA", GetScreenWidth() / 2 - 20, 200, 40, RAYWHITE);
-    DrawText("Press ENTER to play", GetScreenWidth() / 2 - 80, 300, 20, GRAY);
+void MenuScene::draw()
+{
+    constexpr int titleSize  = 80;
+    constexpr int promptSize = 30;
+    const char* title  = "BallBeach";
+    const char* prompt = "Press ENTER to play";
+
+    DrawText(title,  SCREEN_WIDTH / 2 - MeasureText(title,  titleSize)  / 2, SCREEN_HEIGHT / 2 - 80, titleSize,  RAYWHITE);
+    DrawText(prompt, SCREEN_WIDTH / 2 - MeasureText(prompt, promptSize) / 2, SCREEN_HEIGHT / 2 + 40, promptSize, RAYWHITE);
 }

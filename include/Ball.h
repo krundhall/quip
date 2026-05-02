@@ -1,14 +1,21 @@
 #pragma once
+#include "Player.h"
 #include <raylib.h>
+#include <raymath.h>
 
 class Ball
 {
-private:
+public:
     Vector2 position;
-    Vector2 velocity;
+    Vector2 speed;
     float radius;
     Color color;
-public:
+    PlayerSide start;
+
+    int touchCount = 0;
+
+    Ball();
+
     void update(float dt);
     void draw();
 };
