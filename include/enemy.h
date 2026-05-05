@@ -16,6 +16,7 @@ struct Enemy
     bool is_aggroed = false;
     float scale;
     float hit_timer;
+    float death_timer;
     Vector2 knockback_vel;
 
     AnimationState anim;

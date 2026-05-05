@@ -101,9 +101,9 @@ void assets_init(TextureManager &manager)
     textures_add_animation(manager, "player", "death", 3, 4);
 
     // ENEMY
-    textures_load(manager, "enemy", "../assets/sprites/npc/GOBLIN.png", 32, 32);
+    textures_load(manager, "enemy", "../assets/sprites/enemies/GOBLIN.png", 32, 32);
     textures_add_animation(manager, "enemy", "idle", 0, 8);
     textures_add_animation(manager, "enemy", "running", 1, 8);
     textures_add_animation(manager, "enemy", "hit", 2, 4);
-    textures_add_animation(manager, "enemy", "death", 3, 4);
+    textures_add_animation(manager, "enemy", "death", 3, 16);
 }

@@ -74,6 +74,9 @@ void spell_collision(Player &player, std::vector<Enemy> &enemies)
     for (auto &enemy : enemies)
         for (int i = 0; i < player.spell_count; i++)
         {
+            if (enemy.health <= 0)
+                continue;
+
             if (!CheckCollisionCircleRec(player.spells[i].position,
                                          player.spells[i].radius,
                                          {enemy.position.x - (enemy.size.x / 2),
@@ -90,6 +93,9 @@ void spell_collision(Player &player, std::vector<Enemy> &enemies)
 
             player.spells[i].alive = false;
             enemy.health--;
+            if (enemy.health <= 0)
+                continue;
+            ;
             enemy.hit_timer = 0.4f;
             enemy.anim.current_animation = EntityAnimation::HIT;
             enemy.anim.current_frame = 0;

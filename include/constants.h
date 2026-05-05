@@ -3,6 +3,8 @@
 constexpr int NR_OF_ENEMIES = 3;
 constexpr int MAX_ACTIVE_SPELLS = 100;
 constexpr float FRICTION = 0.95;
+constexpr float DEATH_TIMER = 1.6f;
+constexpr int ENEMY_DEATH_FRAMES = 16;
 
 /* HP BAR */
 constexpr int SQ_SIZE_X = 30;

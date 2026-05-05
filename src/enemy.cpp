@@ -2,6 +2,7 @@
 #include "constants.h"
 #include "helper.h"
 #include "player.h"
+#include <algorithm>
 #include <raymath.h>
 #include <vector>
 
@@ -38,38 +39,55 @@ void enemy_update(const Player &player, std::vector<Enemy> &enemies, float dt)
     {
         if (enemy.hit_timer > 0)
             enemy.hit_timer -= dt;
-        if (enemy.hit_timer <= 0)
+
+        if (enemy.health <= 0)
         {
-            auto temp = enemy.anim.current_animation;
-            enemy.anim.current_animation =
-                (enemy.is_aggroed == true) ? EntityAnimation::RUNNING : EntityAnimation::IDLE;
-            if (enemy.anim.current_animation != temp)
+            enemy.death_timer -= dt;
+            if (enemy.anim.current_animation != EntityAnimation::DEATH)
+            {
+                enemy.anim.current_animation = EntityAnimation::DEATH;
                 enemy.anim.current_frame = 0;
+            }
         }
 
-        Vector2 player_center = _rec_center(player.position, player.size);
-        Vector2 enemy_center = _rec_center(enemy.position, enemy.size);
-
-        Vector2 dir = Vector2Subtract(player_center, enemy_center);
-        Vector2 normal = Vector2Normalize(dir);
-
-        if (Vector2Distance(player_center, enemy_center) < enemy.aggro_radius || enemy.is_aggroed)
+        if (enemy.health > 0)
         {
-            enemy.is_aggroed = true;
-            enemy.position += enemy.speed * dt * normal;
-        }
+            if (enemy.hit_timer <= 0)
+            {
+                auto temp = enemy.anim.current_animation;
+                enemy.anim.current_animation =
+                    (enemy.is_aggroed == true) ? EntityAnimation::RUNNING : EntityAnimation::IDLE;
+                if (enemy.anim.current_animation != temp)
+                    enemy.anim.current_frame = 0;
 
-        if (Vector2Length(enemy.knockback_vel) > 0.5f)
-        {
-            enemy.position = Vector2Add(enemy.position, Vector2Scale(enemy.knockback_vel, dt));
-            enemy.knockback_vel = Vector2Scale(enemy.knockback_vel, FRICTION);
+                Vector2 player_center = _rec_center(player.position, player.size);
+                Vector2 enemy_center = _rec_center(enemy.position, enemy.size);
+
+                Vector2 dir = Vector2Subtract(player_center, enemy_center);
+                Vector2 normal = Vector2Normalize(dir);
+
+                if (Vector2Distance(player_center, enemy_center) < enemy.aggro_radius ||
+                    enemy.is_aggroed)
+                {
+                    enemy.is_aggroed = true;
+                    enemy.position += enemy.speed * dt * normal;
+                }
+            }
+            if (Vector2Length(enemy.knockback_vel) > 0.5f)
+            {
+                enemy.position = Vector2Add(enemy.position, Vector2Scale(enemy.knockback_vel, dt));
+                enemy.knockback_vel = Vector2Scale(enemy.knockback_vel, FRICTION);
+            }
         }
-        entity_animate(enemy.anim, dt);
+        if (enemy.health > 0 || enemy.anim.current_frame < ENEMY_DEATH_FRAMES - 1)
+            entity_animate(enemy.anim, dt);
     }
+
     // Remove dead
     enemies.erase(std::remove_if(enemies.begin(),
                                  enemies.end(),
-                                 [](const auto &enemy) { return enemy.health <= 0; }),
+                                 [](const auto &enemy)
+                                 { return enemy.death_timer <= 0 && enemy.health <= 0; }),
                   enemies.end());
 }
 
@@ -110,6 +128,7 @@ Enemy enemy_init(Vector2 position)
     enemy.is_aggroed = false;
     enemy.scale = 3.5f;
     enemy.hit_timer = 0.0f;
+    enemy.death_timer = DEATH_TIMER;
     enemy.knockback_vel = {0, 0};
     enemy.anim.current_animation = EntityAnimation::IDLE;
     enemy.anim.current_frame = 0;
