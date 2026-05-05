@@ -1,11 +1,11 @@
 #include "enemy.h"
+#include "configs/enemy_config.h"
 #include "constants.h"
 #include "helper.h"
 #include "player.h"
 #include <algorithm>
 #include <raymath.h>
 #include <vector>
-
 static std::string animation_to_string(EntityAnimation anim)
 {
     switch (anim)
@@ -26,12 +26,12 @@ std::vector<Enemy> _build_enemy_array()
 {
     std::vector<Enemy> enemies;
 
-    enemies.push_back(enemy_init({50, 100}));
-    enemies.push_back(enemy_init({50, 250}));
-    enemies.push_back(enemy_init({50, 500}));
-    enemies.push_back(enemy_init({200, 100}));
-    enemies.push_back(enemy_init({200, 250}));
-    enemies.push_back(enemy_init({200, 500}));
+    enemies.push_back(enemy_create(ENEMYTYPE::GOBLIN, {50, 50}));
+    enemies.push_back(enemy_create(ENEMYTYPE::GOBLIN, {50, 250}));
+    enemies.push_back(enemy_create(ENEMYTYPE::GOBLIN, {50, 450}));
+    enemies.push_back(enemy_create(ENEMYTYPE::GOBLIN, {150, 50}));
+    enemies.push_back(enemy_create(ENEMYTYPE::GOBLIN, {150, 250}));
+    enemies.push_back(enemy_create(ENEMYTYPE::GOBLIN, {150, 450}));
 
     return enemies;
 }
@@ -128,20 +128,24 @@ void enemy_draw(std::vector<Enemy> &enemies, TextureManager &tex_manager)
     }
 }
 
-Enemy enemy_init(Vector2 position)
+Enemy enemy_create(ENEMYTYPE type, Vector2 position)
 {
-    Enemy enemy;
+    const EnemyConfig* config = get_enemy_config(type);
+    if (!config)
+        return Enemy{};
+
+    Enemy enemy = {};
+    enemy.health = config->health;
+    enemy.speed = config->speed;
+    enemy.size = config->size;
+    enemy.aggro_radius = config->aggro_radius;
+    enemy.damage = config->damage;
+    enemy.scale = config->scale;
+    enemy.swing_timer = config->swing_timer;
+    enemy.sprite_name = config->sprite_name;
     enemy.position = position;
-    enemy.speed = {50, 50};
-    enemy.size = {25, 45};
-    enemy.health = 5;
-    enemy.aggro_radius = 400;
-    enemy.is_aggroed = false;
-    enemy.scale = 3.5f;
     enemy.hit_timer = 0.0f;
     enemy.death_timer = DEATH_TIMER;
-    enemy.swing_timer = ENEMY_SWING_TIMER;
-    enemy.damage = 1.0f;
     enemy.knockback_vel = {0, 0};
     enemy.anim.current_animation = EntityAnimation::IDLE;
     enemy.anim.current_frame = 0;

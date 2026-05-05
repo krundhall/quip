@@ -6,6 +6,11 @@
 
 struct Player; // forward
 
+enum class ENEMYTYPE
+{
+    GOBLIN
+};
+
 struct Enemy
 {
     Vector2 position;
@@ -22,11 +27,11 @@ struct Enemy
     Vector2 knockback_vel;
 
     AnimationState anim;
-
+    std::string sprite_name;
     Color color;
 };
 
 std::vector<Enemy> _build_enemy_array();
 void enemy_update(const Player &player, std::vector<Enemy> &enemies, float dt);
 void enemy_draw(std::vector<Enemy> &enemies, TextureManager &tex_manager);
-Enemy enemy_init(Vector2 position);
+Enemy enemy_create(ENEMYTYPE type, Vector2 position);

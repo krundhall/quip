@@ -1,5 +1,5 @@
+#include "configs/spell_config.h"
 #include "spells/spell.h"
-#include "spells/spell_config.h"
 #include "texture_manager.h"
 #include <cmath>
 #include <exception>

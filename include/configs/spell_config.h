@@ -1,5 +1,5 @@
 #pragma once
-#include "spell.h"
+#include "spells/spell.h"
 #include <string>
 struct SpellConfig
 {
@@ -21,7 +21,7 @@ const SpellConfig FIREBALL = {.speed = 750.0f,
                               .damage = 10,
                               .scale = 3.0f,
                               .radius = 18.0f,
-                              .knockback = 1000.0f,
+                              .knockback = 200.0f,
                               .tag = SPELLTAG::FIRE,
                               .sprite_name = "fireball",
                               .animation_name = "default"};
