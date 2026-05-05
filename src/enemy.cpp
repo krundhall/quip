@@ -29,6 +29,9 @@ std::vector<Enemy> _build_enemy_array()
     enemies.push_back(enemy_init({50, 100}));
     enemies.push_back(enemy_init({50, 250}));
     enemies.push_back(enemy_init({50, 500}));
+    enemies.push_back(enemy_init({200, 100}));
+    enemies.push_back(enemy_init({200, 250}));
+    enemies.push_back(enemy_init({200, 500}));
 
     return enemies;
 }
@@ -66,6 +69,12 @@ void enemy_update(const Player &player, std::vector<Enemy> &enemies, float dt)
                 Vector2 dir = Vector2Subtract(player_center, enemy_center);
                 Vector2 normal = Vector2Normalize(dir);
 
+                // Flip
+                if (dir.x < 0)
+                    enemy.anim.flip_horizontal = true; // Moving left
+                else if (player.dir.x > 0)
+                    enemy.anim.flip_horizontal = false; // Moving right
+
                 if (Vector2Distance(player_center, enemy_center) < enemy.aggro_radius ||
                     enemy.is_aggroed)
                 {
@@ -79,6 +88,9 @@ void enemy_update(const Player &player, std::vector<Enemy> &enemies, float dt)
                 enemy.knockback_vel = Vector2Scale(enemy.knockback_vel, FRICTION);
             }
         }
+
+
+
         if (enemy.health > 0 || enemy.anim.current_frame < ENEMY_DEATH_FRAMES - 1)
             entity_animate(enemy.anim, dt);
     }
