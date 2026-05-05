@@ -54,7 +54,7 @@ void enemy_update(Player &player, std::vector<Enemy> &enemies, float dt)
             if (enemy.anim.current_animation != EntityAnimation::DEATH)
             {
                 entity_begin_death(enemy.anim);
-                enemy_on_death(player, enemy);
+                enemy_on_death(enemy);
             }
         }
 

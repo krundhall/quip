@@ -10,6 +10,7 @@ DONT BE AFRAID TO FAIL
 #include "constants.h"
 #include "enemy.h"
 #include "enums.h"
+#include "event_queue.h"
 #include "helper.h"
 #include "player.h"
 #include "spells/spell.h"
@@ -51,6 +52,7 @@ int main()
             BeginMode2D(camera);
 
             update(player, enemies, camera, dt);
+            process_events(player, state);
             draw(player, enemies, camera, tex_manager);
 
             EndMode2D();
@@ -86,9 +88,6 @@ int main()
 void update(Player &player, std::vector<Enemy> &enemies, Camera2D &camera, float dt)
 {
     player_update(player, dt, camera);
-    if (player.health <= 0 && player.death_timer <= 0)
-        state = GAMESTATE::GAMEOVER;
-
     enemy_update(player, enemies, dt);
     enemy_enemy_collision(enemies);
     player_enemy_collision(player, enemies);

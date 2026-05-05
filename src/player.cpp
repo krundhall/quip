@@ -2,6 +2,7 @@
 #include "configs/player_config.h"
 #include "constants.h"
 #include "entity_animation.h"
+#include "event_queue.h"
 #include "helper.h"
 #include "spells/spell.h"
 #include <raymath.h>
@@ -26,11 +27,18 @@ void player_update(Player &player, float dt, const Camera2D &camera)
 {
     if (player.health <= 0)
     {
+        if (player.anim.current_animation != EntityAnimation::DEATH)
+            entity_begin_death(player.anim);
+
         player.death_timer -= dt;
-        entity_begin_death(player.anim);
         entity_animate(player.anim, dt);
         if (player.anim.current_frame >= PLAYER_DEATH_FRAMES - 1)
             player.anim.current_frame = PLAYER_DEATH_FRAMES - 1;
+
+        // Push player_death event after
+        if (player.death_timer <= 0)
+            g_event_queue.push_back(make_player_died_event());
+
         return;
     }
 
@@ -174,6 +182,10 @@ void player_hud(const Player &player)
     /* XP */
     std::string xp = "XP: " + std::to_string(player.xp);
     DrawText(xp.c_str(), 20, 100, 20, RAYWHITE);
+
+    /* XP */
+    std::string level = "LVL: " + std::to_string(player.level);
+    DrawText(level.c_str(), 20, 150, 20, RAYWHITE);
 }
 
 Player player_create(CLASSTYPE type, Vector2 position)

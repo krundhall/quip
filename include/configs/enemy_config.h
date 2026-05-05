@@ -27,7 +27,7 @@ const EnemyConfig GOBLIN = {.health = 5,
                             .scale = 3.5f,
                             .swing_timer = ENEMY_SWING_TIMER,
                             .sprite_name = "enemy",
-                            .xp_dropped = 5,
+                            .xp_dropped = 25,
                             .level = 1};
 };
 

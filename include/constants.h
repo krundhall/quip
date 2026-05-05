@@ -7,6 +7,8 @@ constexpr float DEATH_TIMER = 1.6f;
 constexpr int ENEMY_DEATH_FRAMES = 16;
 constexpr int PLAYER_DEATH_FRAMES = 4;
 constexpr float ENEMY_SWING_TIMER = 1.0f;
+constexpr int XP_SCALER_BASE = 100;
+
 /* HP BAR */
 constexpr int SQ_SIZE_X = 30;
 constexpr int SQ_SIZE_Y = 30;
