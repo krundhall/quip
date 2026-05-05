@@ -43,14 +43,13 @@ void enemy_update(const Player &player, std::vector<Enemy> &enemies, float dt)
         if (enemy.hit_timer > 0)
             enemy.hit_timer -= dt;
 
+        if (enemy.swing_timer > 0)
+            enemy.swing_timer -= dt;
+
         if (enemy.health <= 0)
         {
             enemy.death_timer -= dt;
-            if (enemy.anim.current_animation != EntityAnimation::DEATH)
-            {
-                enemy.anim.current_animation = EntityAnimation::DEATH;
-                enemy.anim.current_frame = 0;
-            }
+            entity_begin_death(enemy.anim);
         }
 
         if (enemy.health > 0)
@@ -141,6 +140,8 @@ Enemy enemy_init(Vector2 position)
     enemy.scale = 3.5f;
     enemy.hit_timer = 0.0f;
     enemy.death_timer = DEATH_TIMER;
+    enemy.swing_timer = ENEMY_SWING_TIMER;
+    enemy.damage = 1.0f;
     enemy.knockback_vel = {0, 0};
     enemy.anim.current_animation = EntityAnimation::IDLE;
     enemy.anim.current_frame = 0;

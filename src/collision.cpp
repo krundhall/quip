@@ -5,17 +5,24 @@
 
 void player_enemy_collision(Player &player, std::vector<Enemy> &enemies)
 {
+    if (player.health <= 0)
+        return;
+
     for (auto &enemy : enemies)
     {
         if (!_aabb_rec(player.position, player.size, enemy.position, enemy.size))
             continue;
 
-        if (player.hit_timer <= 0)
+        if (player.hit_timer <= 0 && enemy.swing_timer <= 0)
         {
-            player.health--;
-            player.hit_timer = 0.4f;
+            player.health -= (int)enemy.damage;
+            player.hit_timer = 0.25f;
             player.anim.current_animation = EntityAnimation::HIT;
             player.anim.current_frame = 0;
+
+            /* $TODO
+            Could have a enemy attack entityanimation here?*/
+            enemy.swing_timer = ENEMY_SWING_TIMER;
         }
     }
 }

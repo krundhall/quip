@@ -24,12 +24,22 @@ static std::string animation_to_string(EntityAnimation anim)
 
 void player_update(Player &player, float dt, const Camera2D &camera)
 {
+    if (player.health <= 0)
+    {
+        player.death_timer -= dt;
+        entity_begin_death(player.anim);
+        entity_animate(player.anim, dt);
+        if (player.anim.current_frame >= PLAYER_DEATH_FRAMES - 1)
+            player.anim.current_frame = PLAYER_DEATH_FRAMES - 1;
+        return;
+    }
+
     player_movement(player, dt);
     player_cast(player, camera);
-    entity_animate(player.anim, dt);
 
     if (player.hit_timer > 0)
         player.hit_timer -= dt;
+
     if (player.hit_timer <= 0)
     {
         auto temp = player.anim.current_animation;
@@ -55,6 +65,8 @@ void player_update(Player &player, float dt, const Camera2D &camera)
         }
     }
     player.spell_count = write_index;
+
+    entity_animate(player.anim, dt);
 }
 
 void player_movement(Player &player, float dt)

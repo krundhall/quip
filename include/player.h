@@ -15,7 +15,7 @@ struct Player
     float hit_timer;
     float scale;
     Vector2 dir;
-
+    float death_timer;
     Spell spells[MAX_ACTIVE_SPELLS];
     int spell_count;
 

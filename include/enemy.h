@@ -17,6 +17,8 @@ struct Enemy
     float scale;
     float hit_timer;
     float death_timer;
+    float swing_timer;
+    float damage;
     Vector2 knockback_vel;
 
     AnimationState anim;

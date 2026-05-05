@@ -10,3 +10,12 @@ void entity_animate(AnimationState &anim, float dt)
         anim.current_frame++;
     }
 }
+
+void entity_begin_death(AnimationState &anim)
+{
+    if (anim.current_animation == EntityAnimation::DEATH)
+        return;
+
+    anim.current_animation = EntityAnimation::DEATH;
+    anim.current_frame = 0;
+}

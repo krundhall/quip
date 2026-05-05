@@ -17,3 +17,4 @@ struct AnimationState
 };
 
 void entity_animate(AnimationState &anim, float dt);
+void entity_begin_death(AnimationState &anim);

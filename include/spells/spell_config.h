@@ -21,7 +21,7 @@ const SpellConfig FIREBALL = {.speed = 750.0f,
                               .damage = 10,
                               .scale = 3.0f,
                               .radius = 18.0f,
-                              .knockback = 100.0f,
+                              .knockback = 1000.0f,
                               .tag = SPELLTAG::FIRE,
                               .sprite_name = "fireball",
                               .animation_name = "default"};
