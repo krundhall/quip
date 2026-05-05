@@ -1,4 +1,5 @@
 /build
+CLAUDE.md
 /.cache
 compile_commands.json
 /.vscode
