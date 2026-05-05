@@ -10,10 +10,12 @@ void player_enemy_collision(Player &player, std::vector<Enemy> &enemies)
         if (!_aabb_rec(player.position, player.size, enemy.position, enemy.size))
             continue;
 
-        if (player.hit_timer == 0)
+        if (player.hit_timer <= 0)
         {
             player.health--;
-            player.hit_timer = 100;
+            player.hit_timer = 0.4f;
+            player.anim.current_animation = EntityAnimation::HIT;
+            player.anim.current_frame = 0;
         }
     }
 }

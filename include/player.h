@@ -12,8 +12,9 @@ struct Player
     Vector2 speed;
     Vector2 size;
     int health;
-    int hit_timer;
+    float hit_timer;
     float scale;
+    Vector2 dir;
 
     Spell spells[MAX_ACTIVE_SPELLS];
     int spell_count;

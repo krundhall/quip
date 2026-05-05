@@ -29,7 +29,15 @@ void player_update(Player &player, float dt, const Camera2D &camera)
     entity_animate(player.anim, dt);
 
     if (player.hit_timer > 0)
-        player.hit_timer--;
+        player.hit_timer -= dt;
+    if (player.hit_timer <= 0)
+    {
+        auto temp = player.anim.current_animation;
+        player.anim.current_animation =
+            (Vector2Length(player.dir) >= 0.1f) ? EntityAnimation::RUNNING : EntityAnimation::IDLE;
+        if (player.anim.current_animation != temp)
+            player.anim.current_frame = 0;
+    }
 
     // Update spells
     for (int i = 0; i < player.spell_count; i++)
@@ -51,41 +59,24 @@ void player_update(Player &player, float dt, const Camera2D &camera)
 
 void player_movement(Player &player, float dt)
 {
-    Vector2 dir = {0, 0};
+    player.dir = {0, 0};
     if (IsKeyDown(KEY_W))
-        dir.y -= 1;
+        player.dir.y -= 1;
     if (IsKeyDown(KEY_S))
-        dir.y += 1;
+        player.dir.y += 1;
     if (IsKeyDown(KEY_A))
-        dir.x -= 1;
+        player.dir.x -= 1;
     if (IsKeyDown(KEY_D))
-        dir.x += 1;
-    // Not moving
-    if (dir.x == 0 && dir.y == 0)
-    {
-        if (player.anim.current_animation != EntityAnimation::IDLE)
-        {
-            player.anim.current_animation = EntityAnimation::IDLE;
-            player.anim.current_frame = 0;
-        }
-        return;
-    }
-
-    // Hauling ass
-    if (player.anim.current_animation != EntityAnimation::RUNNING)
-    {
-        player.anim.current_animation = EntityAnimation::RUNNING;
-        player.anim.current_frame = 0;
-    }
+        player.dir.x += 1;
 
     // Flip
-    if (dir.x < 0)
+    if (player.dir.x < 0)
         player.anim.flip_horizontal = true; // Moving left
-    else if (dir.x > 0)
+    else if (player.dir.x > 0)
         player.anim.flip_horizontal = false; // Moving right
 
 
-    player.position += Vector2Normalize(dir) * dt * player.speed;
+    player.position += Vector2Normalize(player.dir) * dt * player.speed;
 }
 
 void player_cast(Player &player, const Camera2D &camera)
@@ -178,7 +169,7 @@ Player player_init()
     player.speed = {300, 300};
     player.size = {40, 75};
     player.health = 10;
-    player.hit_timer = 100;
+    player.hit_timer = 0.0f;
     player.spell_count = 0;
     player.scale = 4.0f;
 
