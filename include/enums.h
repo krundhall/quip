@@ -1,5 +1,13 @@
 #pragma once
 
+/* GameState */
+enum class GAMESTATE
+{
+    MAINMENU,
+    PLAYING,
+    GAMEOVER
+};
+
 /* Entity */
 enum class FACING
 {

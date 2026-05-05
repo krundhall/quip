@@ -9,39 +9,74 @@ DONT BE AFRAID TO FAIL
 #include "collision.h"
 #include "constants.h"
 #include "enemy.h"
+#include "enums.h"
 #include "helper.h"
 #include "player.h"
 #include "spells/spell.h"
 #include "texture_manager.h"
 #include <raylib.h>
 
-
 void update(Player &player, std::vector<Enemy> &enemies, Camera2D &camera, float dt);
 void draw(Player &player, std::vector<Enemy> &enemies, Camera2D &camera,
           TextureManager &tex_manager);
 void window_init();
-
+auto state = GAMESTATE::MAINMENU;
 int main()
 {
-    TraceLog(LOG_INFO, "WD: %s", GetWorkingDirectory());
-
     window_init();
-
     Player player =
         player_create(CLASSTYPE::MAGE, {(float)GetScreenWidth() / 2, (float)GetScreenHeight() / 2});
     Camera2D camera = camera_init(player);
     auto enemies = _build_enemy_array();
-
     TextureManager tex_manager;
     textures_init(tex_manager);
     assets_init(tex_manager);
 
-
     while (!WindowShouldClose())
     {
         float dt = GetFrameTime();
-        update(player, enemies, camera, dt);
-        draw(player, enemies, camera, tex_manager);
+        BeginDrawing();
+        ClearBackground(BLACK);
+        switch (state)
+        {
+        case GAMESTATE::MAINMENU:
+        {
+            DrawText("Enter to play", GetScreenWidth() / 2, GetScreenHeight() / 2, 20, RAYWHITE);
+            if (IsKeyPressed(KEY_ENTER))
+                state = GAMESTATE::PLAYING;
+            break;
+        }
+        case GAMESTATE::PLAYING:
+        {
+            BeginMode2D(camera);
+
+            update(player, enemies, camera, dt);
+            draw(player, enemies, camera, tex_manager);
+
+            EndMode2D();
+            break;
+        }
+        case GAMESTATE::GAMEOVER:
+        {
+            DrawText("Game Over", GetScreenWidth() / 2, GetScreenHeight() / 2, 20, RAYWHITE);
+            DrawText("Press R to restart",
+                     GetScreenWidth() / 2,
+                     GetScreenHeight() / 2 + 50,
+                     20,
+                     RAYWHITE);
+            if (IsKeyPressed(KEY_R))
+            {
+                player = player_create(CLASSTYPE::MAGE,
+                                       {(float)GetScreenWidth() / 2, (float)GetScreenHeight() / 2});
+                enemies = _build_enemy_array();
+                state = GAMESTATE::PLAYING;
+            }
+            break;
+        }
+        }
+        player_hud(player);
+        DrawFPS(20, 20);
+        EndDrawing();
     }
     textures_unload_all(tex_manager);
     CloseWindow();
@@ -51,6 +86,9 @@ int main()
 void update(Player &player, std::vector<Enemy> &enemies, Camera2D &camera, float dt)
 {
     player_update(player, dt, camera);
+    if (player.health <= 0 && player.death_timer <= 0)
+        state = GAMESTATE::GAMEOVER;
+
     enemy_update(player, enemies, dt);
     enemy_enemy_collision(enemies);
     player_enemy_collision(player, enemies);
@@ -61,21 +99,11 @@ void update(Player &player, std::vector<Enemy> &enemies, Camera2D &camera, float
 void draw(Player &player, std::vector<Enemy> &enemies, Camera2D &camera,
           TextureManager &tex_manager)
 {
-    BeginDrawing();
-    ClearBackground(BLACK);
-    BeginMode2D(camera);
-
     player_draw(player, tex_manager);
     enemy_draw(enemies, tex_manager);
 
     for (int i = 0; i < player.spell_count; i++)
         spell_draw(&player.spells[i], tex_manager);
-
-
-    EndMode2D();
-    player_hud(player);
-    DrawFPS(20, 20);
-    EndDrawing();
 }
 
 void window_init()
