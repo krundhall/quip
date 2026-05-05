@@ -1,8 +1,9 @@
 #include "collision.h"
+#include "constants.h"
+#include "event_queue.h"
 #include "helper.h"
 #include "raylib.h"
 #include "raymath.h"
-
 void player_enemy_collision(Player &player, std::vector<Enemy> &enemies)
 {
     if (player.health <= 0)
@@ -15,13 +16,7 @@ void player_enemy_collision(Player &player, std::vector<Enemy> &enemies)
 
         if (player.hit_timer <= 0 && enemy.swing_timer <= 0)
         {
-            player.health -= (int)enemy.damage;
-            player.hit_timer = 0.25f;
-            player.anim.current_animation = EntityAnimation::HIT;
-            player.anim.current_frame = 0;
-
-            /* $TODO
-            Could have a enemy attack entityanimation here?*/
+            g_event_queue.push_back(make_player_hit_event(enemy.damage, player.position));
             enemy.swing_timer = ENEMY_SWING_TIMER;
         }
     }
@@ -94,17 +89,12 @@ void spell_collision(Player &player, std::vector<Enemy> &enemies)
                 continue;
             }
 
-            // KNOCKBACK
             Vector2 dir = Vector2Normalize(player.spells[i].velocity);
+            enemy.health -= player.spells[i].damage;
             enemy.knockback_vel = Vector2Scale(dir, player.spells[i].knockback);
-
-            player.spells[i].alive = false;
-            enemy.health--;
-            if (enemy.health <= 0)
-                continue;
-            ;
             enemy.hit_timer = 0.4f;
             enemy.anim.current_animation = EntityAnimation::HIT;
             enemy.anim.current_frame = 0;
+            player.spells[i].alive = false;
         }
 }

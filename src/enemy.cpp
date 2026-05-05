@@ -1,6 +1,7 @@
 #include "enemy.h"
 #include "configs/enemy_config.h"
 #include "constants.h"
+#include "event_queue.h"
 #include "events.h"
 #include "helper.h"
 #include "player.h"
@@ -55,6 +56,7 @@ void enemy_update(Player &player, std::vector<Enemy> &enemies, float dt)
             {
                 entity_begin_death(enemy.anim);
                 enemy_on_death(enemy);
+                g_event_queue.push_back(make_enemy_died_event());
             }
         }
 

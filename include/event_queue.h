@@ -7,13 +7,24 @@ enum class EventType
 {
     XP_GAINED,
     LEVEL_UP,
-    PLAYER_DIED
+    PLAYER_DIED,
+    PLAYER_HIT,
+    ENEMY_HIT,
+    ENEMY_DIED
+};
+
+struct HitData
+{
+    int damage;
+    Vector2 position;
+    Vector2 direction;
+    Vector2 knockback;
 };
 
 union EventData
 {
     int xp_amount;
-    Vector2 position;
+    HitData hit;
 };
 
 struct Event
@@ -39,4 +50,20 @@ inline Event make_level_up_event()
 inline Event make_player_died_event()
 {
     return Event{EventType::PLAYER_DIED, EventData{}};
+}
+
+inline Event make_player_hit_event(int damage, Vector2 position)
+{
+    return Event{EventType::PLAYER_HIT, {.hit = {damage, position, {0, 0}, {0, 0}}}};
+}
+
+inline Event make_enemy_hit_event(int damage, Vector2 position, Vector2 direction,
+                                  Vector2 knockback)
+{
+    return Event{EventType::ENEMY_HIT, {.hit = {damage, position, direction, knockback}}};
+}
+
+inline Event make_enemy_died_event()
+{
+    return Event{EventType::ENEMY_DIED, EventData{}};
 }
