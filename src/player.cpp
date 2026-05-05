@@ -164,12 +164,16 @@ void player_hud(const Player &player)
         DrawRectangleV(
             {start_x + i * (SQ_SIZE_X + GAP), HEALTH_BAR_Y}, {SQ_SIZE_X, SQ_SIZE_Y}, RED);
     }
-
+    /* COORDINATES */
     std::string coords;
     coords += "x: " + std::to_string((int)player.position.x);
     coords += "\ny: ";
     coords += std::to_string((int)player.position.y);
     DrawText(coords.c_str(), 20, 50, 20, RAYWHITE);
+
+    /* XP */
+    std::string xp = "XP: " + std::to_string(player.xp);
+    DrawText(xp.c_str(), 20, 100, 20, RAYWHITE);
 }
 
 Player player_create(CLASSTYPE type, Vector2 position)
@@ -189,6 +193,17 @@ Player player_create(CLASSTYPE type, Vector2 position)
     player.death_timer = DEATH_TIMER;
     player.dir = {0, 0};
     player.scale = config->scale;
+
+    player.level = 1;
+    player.xp = 0;
+    player.attribute_points = 0;
+    player.talent_points = 0;
+
+    player.attrs.strength = config->starting_attrs.strength;
+    player.attrs.agility = config->starting_attrs.agility;
+    player.attrs.intelligence = config->starting_attrs.intelligence;
+    player.attrs.vitality = config->starting_attrs.vitality;
+    player.attrs.spirit = config->starting_attrs.spirit;
 
     player.anim.current_animation = EntityAnimation::IDLE;
     player.anim.current_frame = 0;

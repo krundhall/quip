@@ -1,11 +1,13 @@
 #include "enemy.h"
 #include "configs/enemy_config.h"
 #include "constants.h"
+#include "events.h"
 #include "helper.h"
 #include "player.h"
 #include <algorithm>
 #include <raymath.h>
 #include <vector>
+
 static std::string animation_to_string(EntityAnimation anim)
 {
     switch (anim)
@@ -36,7 +38,7 @@ std::vector<Enemy> _build_enemy_array()
     return enemies;
 }
 
-void enemy_update(const Player &player, std::vector<Enemy> &enemies, float dt)
+void enemy_update(Player &player, std::vector<Enemy> &enemies, float dt)
 {
     for (auto &enemy : enemies)
     {
@@ -49,7 +51,11 @@ void enemy_update(const Player &player, std::vector<Enemy> &enemies, float dt)
         if (enemy.health <= 0)
         {
             enemy.death_timer -= dt;
-            entity_begin_death(enemy.anim);
+            if (enemy.anim.current_animation != EntityAnimation::DEATH)
+            {
+                entity_begin_death(enemy.anim);
+                enemy_on_death(player, enemy);
+            }
         }
 
         if (enemy.health > 0)
@@ -141,6 +147,8 @@ Enemy enemy_create(ENEMYTYPE type, Vector2 position)
     enemy.aggro_radius = config->aggro_radius;
     enemy.damage = config->damage;
     enemy.scale = config->scale;
+    enemy.xp_dropped = config->xp_dropped;
+    enemy.level = config->level;
     enemy.swing_timer = config->swing_timer;
     enemy.sprite_name = config->sprite_name;
     enemy.position = position;

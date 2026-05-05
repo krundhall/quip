@@ -1,4 +1,5 @@
 #pragma once
+#include "attributes.h"
 #include "constants.h"
 #include "enemy.h"
 #include "entity_animation.h"
@@ -9,17 +10,28 @@
 
 struct Player
 {
+    // Transform
     Vector2 position;
+    Vector2 dir;
     Vector2 speed;
     Vector2 size;
+    float scale;
+    // Combat
     int health;
     float hit_timer;
-    float scale;
-    Vector2 dir;
     float death_timer;
+    float swing_timer;
+    // Progression
+    int level;
+    int xp;
+    int attribute_points;
+    int talent_points;
+    PlayerAttributes attrs;
+    PlayerStats stats;
+    // Spells
     Spell spells[MAX_ACTIVE_SPELLS];
     int spell_count;
-
+    // Rendering
     AnimationState anim;
     std::string sprite_name;
 };

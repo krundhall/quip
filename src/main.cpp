@@ -110,6 +110,7 @@ void window_init()
 {
     SetConfigFlags(FLAG_MSAA_4X_HINT | FLAG_WINDOW_HIGHDPI);
     SetTargetFPS(120);
+    ChangeDirectory(GetApplicationDirectory());
     InitWindow(800, 600, "Lol");
 
     int primary = 0;

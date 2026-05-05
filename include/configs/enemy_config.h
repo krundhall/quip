@@ -13,6 +13,8 @@ struct EnemyConfig
     float scale;
     float swing_timer;
     std::string sprite_name;
+    int xp_dropped;
+    int level;
 };
 
 namespace EnemyConfigs
@@ -24,7 +26,9 @@ const EnemyConfig GOBLIN = {.health = 5,
                             .damage = 1.0f,
                             .scale = 3.5f,
                             .swing_timer = ENEMY_SWING_TIMER,
-                            .sprite_name = "enemy"};
+                            .sprite_name = "enemy",
+                            .xp_dropped = 5,
+                            .level = 1};
 };
 
 inline const EnemyConfig* get_enemy_config(ENEMYTYPE type)
