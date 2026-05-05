@@ -1,18 +1,7 @@
 #pragma once
+#include "enums.h"
 #include "texture_manager.h"
 #include <raylib.h>
-
-enum class SPELLTYPE
-{
-    FIREBALL,
-    TELEPORT
-};
-
-enum class SPELLTAG
-{
-    FIRE,
-    ARCANE
-};
 
 struct Spell
 {

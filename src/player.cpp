@@ -1,11 +1,11 @@
 #include "player.h"
+#include "configs/player_config.h"
 #include "constants.h"
 #include "entity_animation.h"
 #include "helper.h"
 #include "spells/spell.h"
 #include <raymath.h>
 #include <string>
-
 static std::string animation_to_string(EntityAnimation anim)
 {
     switch (anim)
@@ -172,18 +172,23 @@ void player_hud(const Player &player)
     DrawText(coords.c_str(), 20, 50, 20, RAYWHITE);
 }
 
-
-
-Player player_init()
+Player player_create(CLASSTYPE type, Vector2 position)
 {
-    Player player;
-    player.position = {(float)GetScreenWidth() / 2, (float)GetScreenHeight() / 2};
-    player.speed = {300, 300};
-    player.size = {40, 75};
-    player.health = 10;
+    const PlayerConfig* config = get_player_config(type);
+    if (!config)
+        return Player{};
+
+    Player player = {};
+    player.health = config->health;
+    player.speed = config->speed;
+    player.size = config->size;
+    player.sprite_name = config->sprite_name;
+    player.position = position;
     player.hit_timer = 0.0f;
     player.spell_count = 0;
-    player.scale = 4.0f;
+    player.death_timer = DEATH_TIMER;
+    player.dir = {0, 0};
+    player.scale = config->scale;
 
     player.anim.current_animation = EntityAnimation::IDLE;
     player.anim.current_frame = 0;

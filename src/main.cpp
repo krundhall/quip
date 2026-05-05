@@ -27,7 +27,8 @@ int main()
 
     window_init();
 
-    Player player = player_init();
+    Player player =
+        player_create(CLASSTYPE::MAGE, {(float)GetScreenWidth() / 2, (float)GetScreenHeight() / 2});
     Camera2D camera = camera_init(player);
     auto enemies = _build_enemy_array();
 

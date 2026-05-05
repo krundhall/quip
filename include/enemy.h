@@ -1,15 +1,11 @@
 #pragma once
 #include "entity_animation.h"
+#include "enums.h"
 #include "texture_manager.h"
 #include <raylib.h>
 #include <vector>
 
 struct Player; // forward
-
-enum class ENEMYTYPE
-{
-    GOBLIN
-};
 
 struct Enemy
 {

@@ -2,6 +2,7 @@
 #include "constants.h"
 #include "enemy.h"
 #include "entity_animation.h"
+#include "enums.h"
 #include "spells/spell.h"
 #include <raylib.h>
 #include <vector>
@@ -20,6 +21,7 @@ struct Player
     int spell_count;
 
     AnimationState anim;
+    std::string sprite_name;
 };
 
 void player_update(Player &player, float dt, const Camera2D &camera);
@@ -28,4 +30,4 @@ void player_draw(Player &player, TextureManager &tex_manager);
 void player_hud(const Player &player);
 void player_cast(Player &player, const Camera2D &camera);
 void player_animate(Player &player, float dt);
-Player player_init();
+Player player_create(CLASSTYPE type, Vector2 position);

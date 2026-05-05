@@ -1,9 +1,8 @@
 #pragma once
 #include "constants.h"
-#include "enemy.h"
+#include "enums.h"
 #include <raylib.h>
 #include <string>
-
 struct EnemyConfig
 {
     int health;

@@ -1,12 +1,5 @@
 #pragma once
-
-enum class EntityAnimation
-{
-    IDLE,
-    RUNNING,
-    HIT,
-    DEATH
-};
+#include "enums.h"
 
 struct AnimationState
 {
