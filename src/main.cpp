@@ -96,7 +96,7 @@ void update(Player &player, std::vector<Enemy> &enemies, Camera2D &camera, float
     camera.target = Vector2{_rec_center(player.position, player.size)};
 }
 
-void draw(Player &player, std::vector<Enemy> &enemies, Camera2D &camera,
+void draw(Player &player, std::vector<Enemy> &enemies, Camera2D & /*camera*/,
           TextureManager &tex_manager)
 {
     player_draw(player, tex_manager);

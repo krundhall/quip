@@ -4,3 +4,4 @@ CLAUDE.md
 compile_commands.json
 /.vscode
 /build-win
+/docs
