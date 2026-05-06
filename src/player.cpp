@@ -183,9 +183,17 @@ void player_hud(const Player &player)
     std::string xp = "XP: " + std::to_string(player.xp);
     DrawText(xp.c_str(), 20, 100, 20, RAYWHITE);
 
-    /* XP */
+    /* LEVEL */
     std::string level = "LVL: " + std::to_string(player.level);
     DrawText(level.c_str(), 20, 150, 20, RAYWHITE);
+
+    /* ATTRS */
+    std::string attrs = "Attrs: " + std::to_string(player.attribute_points);
+    DrawText(attrs.c_str(), 20, 200, 20, RAYWHITE);
+
+    /* TALENT */
+    std::string talent = "TALENT: " + std::to_string(player.attribute_points);
+    DrawText(talent.c_str(), 20, 250, 20, RAYWHITE);
 }
 
 Player player_create(CLASSTYPE type, Vector2 position)

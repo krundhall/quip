@@ -110,30 +110,25 @@ void enemy_update(Player &player, std::vector<Enemy> &enemies, float dt)
                   enemies.end());
 }
 
+void enemy_draw_single(Enemy &enemy, TextureManager &tex_manager)
+{
+    SpriteSheet *sheet = textures_get(tex_manager, "enemy");
+    if (sheet)
+    {
+        std::string anim_name = animation_to_string(enemy.anim.current_animation);
+        draw_sprite_animation(*sheet, anim_name, enemy.anim.current_frame, enemy.position, 0.0f,
+                              enemy.scale, enemy.anim.flip_horizontal, WHITE);
+    }
+    DrawRectangleLinesEx({enemy.position.x - (enemy.size.x / 2),
+                          enemy.position.y - (enemy.size.y / 2) + 10.0f, enemy.size.x,
+                          enemy.size.y},
+                         1, RED); // $DEBUG
+}
+
 void enemy_draw(std::vector<Enemy> &enemies, TextureManager &tex_manager)
 {
     for (auto &enemy : enemies)
-    {
-        SpriteSheet* sheet = textures_get(tex_manager, "enemy");
-        if (sheet)
-        {
-            std::string anim_name = animation_to_string(enemy.anim.current_animation);
-            draw_sprite_animation(*sheet,
-                                  anim_name,
-                                  enemy.anim.current_frame,
-                                  enemy.position,
-                                  0.0f,
-                                  enemy.scale,
-                                  enemy.anim.flip_horizontal,
-                                  WHITE);
-        }
-        DrawRectangleLinesEx({enemy.position.x - (enemy.size.x / 2),
-                              enemy.position.y - (enemy.size.y / 2) + 10.0f,
-                              enemy.size.x,
-                              enemy.size.y},
-                             1,
-                             RED); // $DEBUG
-    }
+        enemy_draw_single(enemy, tex_manager);
 }
 
 Enemy enemy_create(ENEMYTYPE type, Vector2 position)

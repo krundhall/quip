@@ -15,11 +15,14 @@ DONT BE AFRAID TO FAIL
 #include "player.h"
 #include "spells/spell.h"
 #include "texture_manager.h"
+#include "tilemap.h"
+#include <iostream>
 #include <raylib.h>
 
-void update(Player &player, std::vector<Enemy> &enemies, Camera2D &camera, float dt);
+void update(Player &player, std::vector<Enemy> &enemies, Camera2D &camera, float dt,
+            const TileMap &map);
 void draw(Player &player, std::vector<Enemy> &enemies, Camera2D &camera,
-          TextureManager &tex_manager);
+          TextureManager &tex_manager, const TileMap &map);
 void window_init();
 auto state = GAMESTATE::MAINMENU;
 int main()
@@ -33,6 +36,12 @@ int main()
     textures_init(tex_manager);
     assets_init(tex_manager);
 
+    TileMap map = load_tilemap("../assets/maps/02.tmx");
+
+    std::cout << "[DEV] MAP WIDTH: " << map.width << '\n'
+              << "[DEV] MAP HEIGHT: " << map.width << '\n';
+    std::cout << "ground: " << map.ground_layers.size() << " obj: " << map.object_tiles.size()
+              << '\n';
     while (!WindowShouldClose())
     {
         float dt = GetFrameTime();
@@ -51,9 +60,9 @@ int main()
         {
             BeginMode2D(camera);
 
-            update(player, enemies, camera, dt);
+            update(player, enemies, camera, dt, map);
             process_events(player, state);
-            draw(player, enemies, camera, tex_manager);
+            draw(player, enemies, camera, tex_manager, map);
 
             EndMode2D();
             break;
@@ -85,24 +94,27 @@ int main()
     return 0;
 }
 
-void update(Player &player, std::vector<Enemy> &enemies, Camera2D &camera, float dt)
+void update(Player &player, std::vector<Enemy> &enemies, Camera2D &camera, float dt,
+            const TileMap &map)
 {
     player_update(player, dt, camera);
     enemy_update(player, enemies, dt);
+    player_tilemap_collision(player, map);
     enemy_enemy_collision(enemies);
     player_enemy_collision(player, enemies);
-    spell_collision(player, enemies);
+    spell_collision(player, enemies, map);
     camera.target = Vector2{_rec_center(player.position, player.size)};
 }
 
 void draw(Player &player, std::vector<Enemy> &enemies, Camera2D & /*camera*/,
-          TextureManager &tex_manager)
+          TextureManager &tex_manager, const TileMap &map)
 {
+    tilemap_draw_ground(map, 2);
     player_draw(player, tex_manager);
     enemy_draw(enemies, tex_manager);
-
     for (int i = 0; i < player.spell_count; i++)
         spell_draw(&player.spells[i], tex_manager);
+    tilemap_draw_object(map, 2);
 }
 
 void window_init()

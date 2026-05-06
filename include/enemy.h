@@ -35,4 +35,5 @@ struct Enemy
 std::vector<Enemy> _build_enemy_array();
 void enemy_update(Player &player, std::vector<Enemy> &enemies, float dt);
 void enemy_draw(std::vector<Enemy> &enemies, TextureManager &tex_manager);
+void enemy_draw_single(Enemy &enemy, TextureManager &tex_manager);
 Enemy enemy_create(ENEMYTYPE type, Vector2 position);
